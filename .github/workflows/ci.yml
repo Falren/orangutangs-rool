@@ -1,18 +1,33 @@
 name: End-to-end tests
 on: push
+
 jobs:
   cypress-run:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Cypress run
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Start the development server
+        run: npm run dev &
+        env:
+          CYPRESS_host: localhost
+          CYPRESS_port: 5173
+
+      - name: Wait for the server to be ready
+        uses: jakejarvis/wait-action@v0.2.0
+        with:
+          url: 'http://localhost:5173'
+
+      - name: Run Cypress tests
         uses: cypress-io/github-action@v6
         with:
-          start: npm run dev
           browser: chrome
-          wait-on: 'http://localhost:5173'
-          env:
-            CYPRESS_host: localhost
-            CYPRESS_port: 5173
-
