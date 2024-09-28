@@ -8,6 +8,9 @@ jobs:
         uses: actions/checkout@v4
       - name: Cypress run
         uses: cypress-io/github-action@v6
+        start: npm run dev
+        browser: chrome
+        wait-on: 'http://localhost:5173'
         env:
           CYPRESS_host: localhost
           CYPRESS_port: 5173
